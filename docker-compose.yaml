@@ -1,0 +1,102 @@
+vi docker-compose.yaml
+version: '2'
+services:
+    service_one:
+       image: 'hello-world'
+    service_two:
+       image: 'nginx:latest'
+--------------------------------------------------
+docker-compose up 
+docker-compose up service_one (specific service_one container will run)
+docker-compose up service_one (specific service_two container will run)
+docker-compose -f test.yaml up
+docker-compose 
+--------------------------------------------------
+version: '3'
+services:
+   httpds: 
+     image: 'httpd'
+-------------------------------------------------
+docker-compose up -d 
+docker compose logs -f (serive_name)httpds
+docker-compose exec -it httpds bash (to go inside of conatiner)
+-------------------------------------------------
+version: '2'
+services:
+   httpd:
+     image: 'httpd'
+   tomcat:
+     image: 'tomcat'
+------------------------------------------------
+docker-compose up
+docker ps
+docker-compose logs -f tomcat
+docker-compose logs -f httpd
+docker-compose exec -it tomcat bash (for controlling the service)
+docker-compose down
+docker-compose up httpd
+docker-compose up -d httpd (when u dont write -d it will stop once we do control-c)
+-----------------------------------------------------------------------------------
+how to scale the containers 
+docker-compose -d --scale httpd=3 --scale tomcat=3
+o/p:
+docker-compose ps
+     Name             Command        State    Ports  
+-----------------------------------------------------
+rriday_httpd_1    httpd-foreground   Up      80/tcp  
+rriday_httpd_2    httpd-foreground   Up      80/tcp  
+rriday_httpd_3    httpd-foreground   Up      80/tcp  
+rriday_tomcat_1   catalina.sh run    Up      8080/tcp
+----------------------------------------------------------------------------------
+application deployment using docker-compose
+version: '3'
+services:
+   httpd:
+     image: 'httpd'
+     ports:
+     - '80:80'    
+     volumes:
+     - '/Desktop/RRiday/sub-1:/usr/local/apache2/htdocs'
+      #   ->host machine      : the machine on which u have to mnt the volume 
+-------------------------------------------------------------------------------
+docker-compose -f docker-compose-httpd.yaml up
+docker-compose -f docker-compose-httpd.yaml down
+docker-compose -f docker-compose-httpd.yaml up -d 
+docker-compose -f docker-compose-httpd.yaml up -d --scale httpd=3  (u have to assign the ports for these containers as well other wise u will get an error)
+version: '3'
+services:
+   httpd:
+     image: 'httpd'
+     ports:
+     - '80-90:80' #--------for container port in security group open up 80 to 90 as well )  
+     volumes:
+     - '/Desktop/RRiday/sub-1:/usr/local/apache2/htdocs'
+docker-compose -f docker-compose-httpd.yaml up -d
+http://3.111.188.126:80 
+http://3.111.188.126:81
+http://3.111.188.126:82
+docker ps 
+docker stats 
+docker-compose -f docker-compose-httpd.yaml down
+--------------------------------------------------------------------------------
+tomcat application
+version: '3'
+services:
+  tomcat:
+    image: 'tomcat'
+    ports: 
+    - '8080-8085:8080'
+    volumes:
+    - '/mnt/wars:/usr/local/tomcat/webapps'
+http://3.111.188.126:8080/sample/  ----tomcat me sample likhna padta hai
+
+  
+
+
+
+
+
+
+
+     
+
